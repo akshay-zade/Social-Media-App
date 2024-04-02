@@ -1,11 +1,17 @@
 const express = require('express');
-const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
+const bodyparser = require('body-parser');
+const dotenv = require('dotenv');
 const app =  express();
 const PORT = 2108 ; 
-require('dotenv').config();
+dotenv.config();
+const AuthRoute = require('./Routes/AuthRoute')
+
+app.use(bodyparser.json({limit:'30mb',extended:'true'}));
+app.use(bodyparser.json({limit:'30mb',extended:'true'}))
 
   
-mongoose.connect("mongodb+srv://akshayzade707:de3oZvs2bbk2OvKz@arkesnhu.i1a7crx.mongodb.net/?retryWrites=true&w=majority&appName=ARKESNHU")
+mongoose.connect(process.env.MONGO_URI , {useNewUrlParser:true , useUnifiedTopology:true})
 .then(()=>{
     console.log("MongoDB Connected Successfully........")
 }).catch((error)=>{
@@ -13,7 +19,7 @@ mongoose.connect("mongodb+srv://akshayzade707:de3oZvs2bbk2OvKz@arkesnhu.i1a7crx.
 })
 
 
-
+app.use('/auth', AuthRoute)
 
 app.listen(PORT , ()=> {
     console.log(`Server Running Successfully on Port ${PORT}`);
